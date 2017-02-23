@@ -32,7 +32,7 @@ These are truly delicious:
 
 ### But Wait, There's More!
 
-Additionally the first field of every line of the comment file is the score of the comment.  With this you can see how immensely unpopular the user is
+The first field of every line of the comment file is the score of that comment.  You can see how immensely unpopular the user is
 with a few quick cuts of everyday shell tools: `cat kristopolous-comments | awk ' { print $1 } ' | sort -n | uniq -c`. 
 
 Razzamatazz and alakazam, you've been data-mined!
