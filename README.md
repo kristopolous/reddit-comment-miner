@@ -1,6 +1,6 @@
 ## The Latest in Stalker Assistance Technology
 
-Ever get a reply on reddit where you think "Dear Lord Almighty! This person crazy. Who is this?!" 
+Ever get a reply on reddit and think "Dear Lord Almighty! This person crazy. Who is this?!" 
 
 Now you *could* page through their comments and stalk them the old way or you could live it up with the brand new
 `reddit-comment-miner`.
