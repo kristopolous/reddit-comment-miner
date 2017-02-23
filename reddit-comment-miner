@@ -1,0 +1,67 @@
+#!/usr/bin/php7.0
+<?php
+  if(count($argv) === 1) {
+    echo "Provide the reddit user name as the argument.";
+    exit(-1);
+  }
+
+  $user = strtolower($argv[1]);
+
+  $base_url = "https://www.reddit.com/user/$user/";
+
+  $current_url = $base_url;
+  $ix = 0;
+  $subDistrib = [];
+  if(!is_dir('data')) {
+    mkdir('data');
+  }
+  $commentFile = "data/$user-comments";
+  if(file_exists($commentFile)) {
+    unlink($commentFile);
+  }
+
+  while ($current_url) {
+    $ix++;
+    $content = '';
+    $fname = "data/$user-$ix.html";
+    if(file_exists($fname)) {
+      $file = file_get_contents($fname);
+    } else {
+      $file = file_get_contents($current_url);
+    }
+    $file = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $file);
+    $file = preg_replace('#<section(.*?)>(.*?)</section>#is', '', $file);
+    $file = preg_replace('#<time(.*?)>(.*?)</time>#is', '', $file);
+    $file = preg_replace('#<ul(.*?)>(.*?)</ul>#is', '', $file);
+    file_put_contents($fname, $file);
+    echo "$ix $current_url\n"; 
+
+    $dom = new DOMDocument();
+    $dom->loadHTML($file);
+    $divList = $dom->getElementsByTagName('div');
+    foreach($divList as $div) {
+      if($div->getAttribute('class') === 'md') {
+        $content .= $div->nodeValue . "\n";
+      }
+    }
+    $linkList = $dom->getElementsByTagName('a');
+
+    $current_url = false;
+    foreach($linkList as $link) {
+      $rel = $link->getAttribute('rel');
+      $cls = $link->getAttribute('class');
+      if($rel === 'nofollow next') {
+        $current_url = $link->getAttribute('href');
+      }
+      if($cls === 'subreddit hover') {
+        $sub = $link->nodeValue;
+        if(!isset($subDistrib[$sub])) {
+          $subDistrib[$sub] = 0;
+        }
+        $subDistrib[$sub]++;
+      }
+    }
+    file_put_contents("data/$user-distrib", json_encode($subDistrib, JSON_PRETTY_PRINT));
+    file_put_contents($commentFile, $content, FILE_APPEND);
+
+  }
