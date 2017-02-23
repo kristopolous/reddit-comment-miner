@@ -1,15 +1,13 @@
 ## The Latest in Stalker Assistance Technology
 
-Sometimes I get a reply to a comment that makes me think "Is this person crazy? Who the heck is this?" 
+Ever get a reply on reddit where you think "Dear Lord Almighty! This person crazy. Who is this?!" 
 
-Now I could just page through the comments reading them like a typical obsessive crazy person. But I'm a programmer! I am
-computer-assisted crazy! 
+Now you *could* page through their comments and stalk them the old way or you could live it up with the brand new
+`reddit-comment-miner`.
 
-## The Goods
+This magical PHP7 script casts a spell of Internet Stalker Level 1 over a given reddit user.
 
-This only slightly magical PHP7 script casts a spell of Internet Stalker Level 1 over a given reddit user.
-
-To use, provide a nickname, such as, well ok, let's use mine.
+Watch as we provide a nickname and the script chugs away, slurping up all the comments:
 
     $ ./reddit-comment-miner kristopolous
     1 https://www.reddit.com/user/kristopolous/
@@ -17,7 +15,7 @@ To use, provide a nickname, such as, well ok, let's use mine.
     ...
     $
 
-Now what you'll have, in the `data/` directory, are morsels like these:
+Now we descend into the `data/` directory and see the tasty morsels left behind:
 
     kristopolous-10.html
     kristopolous-11.html
@@ -26,17 +24,15 @@ Now what you'll have, in the `data/` directory, are morsels like these:
     kristopolous-distrib
 
 
+These are truly delicious:
+
 * The html files are cleaned up versions of what reddit gave us.
-* The comments file is ALL THE COMMENTS in one giant, searchable, plain text file.  You can do things like um, `grep -i "i work at"` or "i live" ... creepy creeepy!
-* The distrib file is their subreddit distribution so you can harshly judge them via a quick glance.
+* The comments file are ALL THE COMMENTS in one giant, searchable, plain text file.  We can do creepy things like `grep -i "i work at"` or "i live".
+* The distrib file is a subreddit distribution to conveniently judge someone at a quick glance.
 
-Additionally the first field of every line of the comment file is the score of the comment.  You can say, I dunno, see how stupid someone is
-by doing, you know, `cat kristopolous-comments | awk ' { print $1 } ' | sort -n | uniq -c`. 
+### But Wait, There's More!
 
-And like that, razzamatazz and alakazam, you've been data-mined!
+Additionally the first field of every line of the comment file is the score of the comment.  With this you can see how immensely unpopular the user is
+with a few quick cuts of everyday shell tools: `cat kristopolous-comments | awk ' { print $1 } ' | sort -n | uniq -c`. 
 
-I mean um, hey, stop doing that. What's wrong with you. 
-
-Gawwd, you creep.
-
-
+Razzamatazz and alakazam, you've been data-mined!
