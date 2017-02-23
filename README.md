@@ -7,7 +7,7 @@ Now you *could* page through their comments and stalk them the old way or you co
 
 This magical PHP7 script casts a spell of Internet Stalker Level 1 over a given reddit user.
 
-Watch as we provide a nickname and the script chugs away, slurping up all the comments:
+Watch as we provide a nickname and the script chugs away, slurping up all their comments:
 
     $ ./reddit-comment-miner kristopolous
     1 https://www.reddit.com/user/kristopolous/
