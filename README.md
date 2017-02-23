@@ -27,7 +27,7 @@ Now we descend into the `data/` directory and see the tasty morsels left behind:
 These are truly delicious:
 
 * The html files are cleaned up versions of what reddit gave us.
-* The comments file are ALL THE COMMENTS in one giant, searchable, plain text file.  We can do <s>creepy</s>marvelous things like `grep -i "i work at"` or "i live".
+* The comments file are ALL THE COMMENTS in one giant, searchable, plain text file.  We can do <s>creepy</s> marvelous things like `grep -i "i work at"` or `"i live in"`.
 * The distrib file is a subreddit distribution to conveniently judge someone at a quick glance.
 
 ### But Wait, There's More!
