@@ -6,42 +6,60 @@
   }
 
   $user = strtolower($argv[1]);
+  $dir = 'data';
 
   $base_url = "https://www.reddit.com/user/$user/";
 
   $current_url = $base_url;
   $ix = 0;
   $subDistrib = [];
-  if(!is_dir('data')) {
-    mkdir('data');
+  if(!is_dir($dir)) {
+    mkdir($dir);
   }
-  $commentFile = "data/$user-comments";
+  $commentFile = "$dir/$user-comments";
+  $distribFile = "$dir/$user-distrib";
   if(file_exists($commentFile)) {
     unlink($commentFile);
   }
+  $commentCount = 0;
 
   while ($current_url) {
     $ix++;
     $content = '';
-    $fname = "data/$user-$ix.html";
-    if(file_exists($fname)) {
-      $file = file_get_contents($fname);
-    } else {
-      $file = file_get_contents($current_url);
-    }
-    $file = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $file);
-    $file = preg_replace('#<section(.*?)>(.*?)</section>#is', '', $file);
-    $file = preg_replace('#<time(.*?)>(.*?)</time>#is', '', $file);
-    $file = preg_replace('#<ul(.*?)>(.*?)</ul>#is', '', $file);
-    file_put_contents($fname, $file);
+    $fname = "$dir/$user-$ix.html";
     echo "$ix $current_url\n"; 
+
+    if(file_exists($fname)) {
+      $file = @file_get_contents($fname);
+    } else {
+      if (! ($file = @file_get_contents($current_url)) ) {
+        break;
+      }
+      foreach(['script','section','time','ul'] as $type) {
+        $file = preg_replace("#<$type(.*?)>(.*?)</$type>#is", "", $file);
+      }
+    }
+    file_put_contents($fname, $file);
 
     $dom = new DOMDocument();
     $dom->loadHTML($file);
     $divList = $dom->getElementsByTagName('div');
     foreach($divList as $div) {
-      if($div->getAttribute('class') === 'md') {
-        $content .= $div->nodeValue . "\n";
+      if($div->getAttribute('class') === 'entry unvoted') {
+        $score = 1;
+        $spanList = $div->getElementsByTagName('span');
+        foreach($spanList as $span) {
+          if($span->getAttribute('class') === 'score unvoted') {
+            $score = intval($span->nodeValue);
+          }
+        }
+        $subDivList = $div->getElementsByTagName('div');
+        foreach($subDivList as $subDiv) {
+          if($subDiv->getAttribute('class') === 'md') {
+            $commentCount++;
+            $content .= $score . ' ' . preg_replace('/\s+/', ' ', $subDiv->nodeValue) . "\n";
+          }
+        }
       }
     }
     $linkList = $dom->getElementsByTagName('a');
@@ -61,7 +79,16 @@
         $subDistrib[$sub]++;
       }
     }
-    file_put_contents("data/$user-distrib", json_encode($subDistrib, JSON_PRETTY_PRINT));
-    file_put_contents($commentFile, $content, FILE_APPEND);
+    if(count($subDistrib)) {
+      file_put_contents($distribFile, json_encode($subDistrib, JSON_PRETTY_PRINT));
+    }
+    if(strlen($content)) {
+      file_put_contents($commentFile, $content, FILE_APPEND);
+    } else if($commentCount === 0) {
+      unlink($fname);
+    }
+  }
 
+  if($commentCount === 0) {
+    echo "Either $user doesn't exist or hasn't said anything. Check the spelling?";
   }
