@@ -1,14 +1,11 @@
-# reddit-comment-miner
-
-## Introduction!
+## Introduction
 
 Sometimes I get a reply to a comment that makes me think "Is this person crazy? Who the heck is this?" 
 
 Now I could just page through the comments reading them like a typical obsessive crazy person. But I'm a programmer! I am
 computer-assisted crazy! 
 
-
-## The Script!
+## The Goods
 
 This only slightly magical PHP7 script casts a spell of Internet Stalker Level 1 over a given reddit user.
 
